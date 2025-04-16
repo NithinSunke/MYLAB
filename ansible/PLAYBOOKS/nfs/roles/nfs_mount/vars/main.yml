@@ -1,0 +1,4 @@
+---
+nfs_server: "truenas.scslabs.com"
+nfs_exported_path: "/mnt/VMPOOL/NFSSHARE"
+nfs_mount_point: "/mnt/nfs_share"

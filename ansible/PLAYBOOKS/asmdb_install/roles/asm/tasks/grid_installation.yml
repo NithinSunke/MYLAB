@@ -1,0 +1,30 @@
+---
+- name: Create response file directory if not exists
+  file:
+    path: "{{ GRID_HOME }}/install/response"
+    state: directory
+    owner: oracle
+    group: oinstall
+    mode: '0755'
+
+- name: Generate response file
+  template:
+    src: "grid_install.rsp.j2"
+    dest: "{{ GRID_HOME }}/install/response/grid_install.rsp"
+    owner: oracle
+    group: oinstall
+    mode: '0644'
+
+- name: Execute Oracle Grid Setup
+  shell: >
+    source /home/oracle/setEnv.sh &&
+    {{ GRID_HOME }}/gridSetup.sh -ignorePrereq -silent -responseFile {{ GRID_HOME }}/install/response/grid_install.rsp
+  become: yes
+  become_user: oracle
+  register: grid_install
+  ignore_errors: yes
+
+- name: Debug installation output
+  debug:
+    msg: "{{ grid_install.stdout_lines }}"
+

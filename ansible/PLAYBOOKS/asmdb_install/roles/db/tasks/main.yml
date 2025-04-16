@@ -1,0 +1,11 @@
+---
+- name: setup DB instance
+  debug:
+    msg:
+      - 'This playbook is for setup Database installation, started at {{ansible_date_time.iso8601}}:'
+
+- name: Preparation tasks for server setup
+  block:
+#    - import_tasks: db_install.yml
+#    - import_tasks: root_sh.yml
+    - import_tasks: create_database.yml

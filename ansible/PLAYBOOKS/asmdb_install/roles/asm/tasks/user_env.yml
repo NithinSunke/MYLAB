@@ -1,0 +1,48 @@
+---
+- name: Copy setEnv.sh
+  template:
+    src: setEnv.sh.j2
+    dest: /home/oracle/setEnv.sh
+    owner: oracle
+    group: oinstall
+    mode: '0644'
+
+- name: Copy grid_env
+  template:
+    src: grid_env.j2
+    dest: /home/oracle/grid_env
+    owner: oracle
+    group: oinstall
+    mode: '0644'
+
+- name: Copy db_env
+  template:
+    src: db_env.j2
+    dest: /home/oracle/db_env
+    owner: oracle
+    group: oinstall
+    mode: '0644'
+
+- name: Update .bash_profile to source setEnv.sh
+  template:
+    src: bash_profile.j2
+    dest: /home/oracle/.bash_profile
+    owner: oracle
+    group: oinstall
+    mode: '0644'
+
+- name: Source environment variables
+  shell: . /home/oracle/setEnv.sh
+  args:
+    executable: /bin/bash
+
+- name: Create GRID_HOME
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: oracle
+    group: oinstall
+    mode: '0755'
+  with_items:
+    - "{{ GRID_HOME }}"
+

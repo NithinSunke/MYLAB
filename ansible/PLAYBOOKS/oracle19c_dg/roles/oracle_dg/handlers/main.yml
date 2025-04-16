@@ -1,0 +1,6 @@
+---
+- name: restart listener
+  shell: |
+    source /home/oracle/profile_o19tc.sh
+    lsnrctl reload
+  become_user: "{{ db_user }}"

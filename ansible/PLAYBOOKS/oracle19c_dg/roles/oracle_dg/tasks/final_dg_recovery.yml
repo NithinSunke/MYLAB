@@ -1,0 +1,19 @@
+- name: Generate RMAN recovery Script
+  template:
+    src: final_rman_recovery.rcv.j2
+    dest: /tmp/final_rman_recovery.rcv
+    owner: "{{ db_user }}"
+    group: "oinstall"
+    mode: '0644'
+
+- name: Generate recovery Shell Script
+  template:
+    src: final_reco.sh.j2
+    dest: /tmp/final_reco.sh
+    owner: "{{ db_user }}"
+    group: "oinstall"
+    mode: '0755'
+
+- name: Execute RMAN recovery
+  command: /tmp/final_reco.sh
+  become_user: "{{ db_user }}"

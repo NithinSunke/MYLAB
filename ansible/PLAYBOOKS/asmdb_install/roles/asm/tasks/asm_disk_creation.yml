@@ -1,0 +1,13 @@
+- name: Ensure script is executable
+  file:
+    path: /mnt/nfs_share/oracle/scripts/configure_shared_disk.sh
+    mode: '0755'
+
+- name: Execute the script
+  command: /mnt/nfs_share/oracle/scripts/configure_shared_disk.sh
+  register: script_output
+  changed_when: script_output.rc != 0
+
+- name: Print script output
+  debug:
+    var: script_output.stdout

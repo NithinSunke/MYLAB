@@ -1,0 +1,28 @@
+---
+- name: Set Home DNS for name resolution
+  lineinfile:
+    path: /etc/resolv.conf
+    line: "nameserver 192.168.1.10"
+    state: present
+- name: Install base packages
+  dnf:
+    name: "{{ base_packages }}"
+    state: present
+- name: Install extra OS packages
+  dnf:
+    name: "{{ extra_packages }}"
+    state: present
+- name: Stop and disable firewalld
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: no
+- name: Set SELinux to permissive
+  selinux:
+    policy: targeted
+    state: permissive
+- name: Ensure SELinux setting persists across reboots
+  replace:
+    path: /etc/selinux/config
+    regexp: '^SELINUX=enforcing'
+    replace: 'SELINUX=permissive'

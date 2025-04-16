@@ -1,0 +1,12 @@
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-compose-plugin
+
+docker_repo_url: "https://download.docker.com/linux/centos/docker-ce.repo"
+docker_user: "{{ ansible_user }}"
+docker_service: "docker"
+enable_extras_repo: true
+pv_disks:
+      - { device: "/dev/sdb", vg_name: "db_vg", lv_name: "db_lv", mount_point: "/var/lib/docker" }

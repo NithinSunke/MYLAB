@@ -1,0 +1,9 @@
+---
+- name: grid patching for Oracle 19c DB
+  debug:
+    msg:
+      - 'This playbook is for grid patching for Oracle 19c DB , started at {{ansible_date_time.iso8601}}:'
+
+- name: Preparation tasks for server setup
+  block:
+    - import_tasks: opatch_check.yml

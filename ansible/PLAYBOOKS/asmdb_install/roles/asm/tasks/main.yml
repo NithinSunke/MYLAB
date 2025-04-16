@@ -1,0 +1,18 @@
+---
+- name: setup ASM instance
+  debug:
+    msg:
+      - 'This playbook is for setup grid installation, started at {{ansible_date_time.iso8601}}:'
+
+- name: Preparation tasks for server setup
+  block:
+#    - import_tasks: partition_disks_u01.yml
+#    - import_tasks: os_setup.yml
+#    - import_tasks: oracle_pwd_set.yml
+#    - import_tasks: asm_disk_creation.yml
+#    - import_tasks: user_env.yml
+#    - import_tasks: prepare_gridhome.yml
+#    - import_tasks: grid_installation.yml
+#    - import_tasks: root_sh.yml
+#    - import_tasks: grid_config.yml
+#    - import_tasks: create_dg.yml

@@ -1,0 +1,6 @@
+---
+- name: Set oracle user password
+  user:
+     name: oracle
+     password: "{{ ORACLE_PASSWORD  | password_hash('sha512') }}"
+

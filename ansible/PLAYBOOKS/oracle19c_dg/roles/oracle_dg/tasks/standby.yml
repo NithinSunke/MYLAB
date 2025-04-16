@@ -1,0 +1,167 @@
+#- name: Backup existing listener.ora
+#  copy:
+#    src: "{{ listener_home }}/listener.ora"
+#    dest: "{{ listener_home }}/listener.ora.bak"
+#    remote_src: yes
+#    backup: yes
+#  ignore_errors: yes
+#
+#- name: Deploy new listener.ora
+#  template:
+#    src: listener.ora.j2
+#    dest: "{{ listener_home }}/listener.ora"
+#    owner: "{{ db_user }}"
+#    group: "oinstall"
+#    mode: '0644'
+#
+#- name: Set environment for oracle user
+#  lineinfile:
+#    path: /home/{{ db_user }}/.bash_profile
+#    line: "export TNS_ADMIN={{ listener_home }}"
+#    create: yes
+#  become_user: "{{ db_user }}"
+
+#- name: Stop Listener
+#  shell: |
+#    source /home/oracle/profile_o19tc.sh
+#    {{ oracle_home }}/bin/lsnrctl stop
+#  become_user: "{{ db_user }}"
+#  ignore_errors: yes
+#
+#- name: Start Listener
+#  shell: |
+#    source /home/oracle/profile_o19tc.sh
+#    {{ oracle_home }}/bin/lsnrctl start
+#  become_user: "{{ db_user }}"
+
+#- name: Backup existing PFILE
+#  copy:
+#    src: "/mnt/nfs_share/oracle/standby_bkp/init{{ primary_db }}.ora"
+#    dest: "/mnt/nfs_share/oracle/standby_bkp/init{{ primary_db }}.ora.bak"
+#    remote_src: yes
+#    backup: yes
+#  
+#- name: Replace primary DB name with standby DB name (excluding db_name)
+#  shell: |
+#    awk '
+#    /^\*.db_name/ { print; next }
+#    { gsub("o19tc", "o19tcsb"); print }
+#    END { print "*.db_unique_name={{ standby_db }}" }
+#    ' /mnt/nfs_share/oracle/standby_bkp/inito19tc.ora > /mnt/nfs_share/oracle/standby_bkp/inito19tcsb.ora
+#    
+#- name: Move new PFILE to the correct location
+#  copy:
+#    src: "/mnt/nfs_share/oracle/standby_bkp/init{{ standby_db }}.ora"
+#    dest: "{{ oracle_home }}/dbs/init{{ standby_db }}.ora"
+#    owner: "{{ db_user }}"
+#    group: "oinstall"
+#    mode: '0644'
+#    remote_src: yes
+
+#- name: Ensure audit_file_dest directory exists
+#  file:
+#    path: "{{ audit_file_dest }}"
+#    state: directory
+#    owner: "{{ db_user }}"
+#    group: "{{ oracle_group }}"
+#    mode: '0755'
+#
+#- name: Ensure control_files directory exists
+#  file:
+#    path: "{{ control_files_dir }}"
+#    state: directory
+#    owner: "{{ db_user }}"
+#    group: "{{ oracle_group }}"
+#    mode: '0755'
+#
+#- name: Ensure db_create_file_dest directory exists
+#  file:
+#    path: "{{ db_create_file_dest }}"
+#    state: directory
+#    owner: "{{ db_user }}"
+#    group: "{{ oracle_group }}"
+#    mode: '0755'
+
+#- name: Ensure online redo log  directory exists
+#  file:
+#    path: "{{ redolog_file_dir }}"
+#    state: directory
+#    owner: "{{ db_user }}"
+#    group: "{{ oracle_group }}"
+#    mode: '0755'
+
+
+#- name: Update log_file_name_convert in standby PFILE
+#  lineinfile:
+#    path: "{{ oracle_home }}/dbs/init{{ standby_db }}.ora"
+#    regexp: '^.*log_file_name_convert'
+#    line: "{{ log_file_name_convert }}"
+#    state: present
+#    backup: yes
+#
+#- name: Update db_file_name_convert in standby PFILE
+#  lineinfile:
+#    path: "{{ oracle_home }}/dbs/init{{ standby_db }}.ora"
+#    regexp: '^.*db_file_name_convert'
+#    line: "{{ db_file_name_convert }}"
+#    state: present
+#    backup: yes
+
+
+#- name: create tnsnames.ora file
+#  file:
+#    path: "{{ oracle_home }}/network/admin/tnsnames.ora"
+#    state: touch
+#    owner: "{{ db_user }}"
+#    group: oinstall 
+#    mode: '0644'
+#
+#
+#- name: Append TNS entries to tnsnames.ora
+#  blockinfile:
+#    path: "{{ oracle_home }}/network/admin/tnsnames.ora"
+#    marker: "# BEGIN ANSIBLE MANAGED BLOCK"
+#    block: "{{ lookup('template', 'tnsnames.ora.j2') }}"
+#    insertafter: EOF
+#    backup: yes
+#  become: yes
+#  become_user: "{{ db_user }}"
+
+#- name: Copy Password File from NFS to DBS Location
+#  copy:
+#    src: "/mnt/nfs_share/oracle/standby_bkp/orapw{{ primary_db }}"
+#    dest: "{{ oracle_home }}/dbs/orapw{{ standby_db }}"
+#    owner: "{{ db_user }}"
+#    group: "{{ oracle_group }}"
+#    mode: '0640'
+#    remote_src: yes
+
+
+#- name: Start Standby Database in NOMOUNT
+#  shell: |
+#    source /home/oracle/profile_o19tcsb.sh
+#    sqlplus / as sysdba <<EOF
+#    startup nomount
+#    exit;
+#    EOF
+#  become: yes
+#  become_user: "{{ db_user }}"
+#  register: startup
+#
+#- name: Display SQL*Plus Output
+#  debug:
+#    msg: "{{ startup.stdout_lines }}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+

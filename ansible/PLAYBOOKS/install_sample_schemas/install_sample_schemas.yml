@@ -1,0 +1,6 @@
+- name: Install Oracle Sample Schemas
+  hosts: oel
+  become: yes
+  become_user: oracle
+  roles:
+    - oracle_schemas

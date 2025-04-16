@@ -1,0 +1,16 @@
+DOMAIN_NAME: "scslabs.com"
+ORACLE_TERM: "xterm"
+oracle_user:  "oracle"
+hostname:      "oemsrv01.scslabs.com"
+ORACLE_BASE: /u01/app/oracle
+ORA_INVENTORY: /u01/app/oraInventory
+ora_languages: en
+ORACLE_HOME: /u01/app/oracle/product/19.0.0/dbhome_1
+ORACLE_SID: coem
+ORACLE_UNQNAME: ${ORACLE_SID}
+PDB_NAME: "oms"
+DATA_DIR: "/u02/oradata"
+oracle_unqname: coem
+listener_name: LISTENER
+listener_port: 1521
+SYS_PASSWORD: "Nxxxxxxxxxx"

@@ -1,0 +1,5 @@
+#!/bin/bash
+ source /home/oracle/profile_{{ primary_db }}.sh
+ export PATH=$ORACLE_HOME/bin:$PATH
+
+rman target / cmdfile=/tmp/rman_script.rcv log=/mnt/nfs_share/oracle/standby_bkp/{{ primary_db }}/rman_backup.log

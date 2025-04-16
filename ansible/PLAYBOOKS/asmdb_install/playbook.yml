@@ -1,0 +1,6 @@
+- name: Install Oracle Standalone Grid database
+  hosts: oel
+  become: yes
+  roles:
+#    - asm
+    - db

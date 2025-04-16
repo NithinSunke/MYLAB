@@ -1,0 +1,129 @@
+---
+#- name: Ensure Oracle Listener is Running
+#  shell: |
+#    source /home/oracle/profile_o19tc.sh
+#    lsnrctl status
+#  become_user: "{{ db_user }}"
+#  register: lsnrctl_status
+
+#- name: Debug listener status output
+#  debug:
+#    msg: "{{ lsnrctl_status.stdout_lines }}"
+#
+#- name: Append TNS entries to tnsnames.ora
+#  blockinfile:
+#    path: "{{ oracle_home }}/network/admin/tnsnames.ora"
+#    marker: "# BEGIN ANSIBLE MANAGED BLOCK"
+#    block: "{{ lookup('template', 'tnsnames.ora.j2') }}"
+#    insertafter: EOF
+#    backup: yes
+#  become: yes
+#  become_user: "{{ db_user }}"
+
+#- name: Copy password file to NFS share
+#  copy:
+#    src: "/u01/app/oracle/product/19.0.0/dbhome_1/dbs/orapw{{ primary_db }}"
+#    dest: "/mnt/nfs_share/oracle/standby_bkp/orapw{{ primary_db }}"
+#    owner: oracle
+#    group: dba
+#    mode: '0600'
+#    remote_src: yes
+
+#- name: Enable Force Logging and Configure Primary
+#  shell: |
+#    source /home/oracle/profile_o19tc.sh
+#    sqlplus / as sysdba <<EOF
+#    ALTER DATABASE FORCE LOGGING;
+#    ALTER SYSTEM SET LOG_ARCHIVE_CONFIG='DG_CONFIG=({{ primary_db }},{{ standby_db }})' scope=both;
+#    alter system set log_archive_dest_1='location=use_db_recovery_file_dest valid_for=(all_logfiles,all_roles) db_unique_name={{ primary_db }}' scope=both;
+#    ALTER SYSTEM SET LOG_ARCHIVE_DEST_2='SERVICE={{ standby_db }} ASYNC VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME={{ standby_db }}';
+#    alter system set log_archive_dest_state_1=enable scope=spfile;
+#    alter system set remote_login_passwordfile=exclusive scope=spfile;
+#    alter system set fal_server={{ standby_db }} scope=spfile;
+#    alter system set db_file_name_convert='{{ primary_db }}','{{ standby_db }}' scope=spfile;
+#    alter system set log_file_name_convert='{{ primary_db }}','{{ standby_db }}' scope=spfile;
+#    alter system set standby_file_management=auto scope=spfile;    
+#    alter system set dg_broker_start=TRUE SCOPE=BOTH;
+#    EXIT;
+#    EOF
+#  become_user: "{{ db_user }}"
+#  register: config_prim
+#
+#- name: Debug Configure Primary output
+#  debug:
+#    msg: "{{ config_prim.stdout_lines }}"
+
+#- name: Add Standby Redo Log files on Primary with 50MB size, total 4 log groups
+#  shell: |
+#    source /home/oracle/profile_o19tc.sh
+#    sqlplus / as sysdba <<EOF
+#    ALTER DATABASE ADD STANDBY LOGFILE GROUP 4 SIZE 50M;
+#    ALTER DATABASE ADD STANDBY LOGFILE GROUP 5 SIZE 50M;
+#    ALTER DATABASE ADD STANDBY LOGFILE GROUP 6 SIZE 50M;
+#    ALTER DATABASE ADD STANDBY LOGFILE GROUP 7 SIZE 50M;
+#    col STATUS format a10
+#    set linesize 150
+#    set pagesize 99
+#    SELECT GROUP#,THREAD#,SEQUENCE#,ARCHIVED,STATUS FROM V$STANDBY_LOG;
+#    EXIT;
+#    EOF
+#  become_user: "{{ db_user }}"
+#  register: redo_creation_prim
+#
+#- name: Debug create redolog files output
+#  debug:
+#    msg: "{{ redo_creation_prim.stdout_lines }}"  
+
+#- name: Create backup directory for primary database
+#  file:
+#    path: "/mnt/nfs_share/oracle/standby_bkp"
+#    state: directory
+#    owner: "{{ db_user }}"
+#    group: "oinstall"
+#    mode: '0755'
+
+#- name: Create Standby Control File
+#  shell: |
+#    source /home/oracle/profile_o19tc.sh
+#    sqlplus / as sysdba <<EOF
+#    ALTER DATABASE CREATE STANDBY CONTROLFILE AS '/mnt/nfs_share/oracle/standby_bkp/standby.ctl';
+#    EXIT;
+#    EOF
+#  become_user: "{{ db_user }}"
+
+#- name: Create PFILE for Standby with updated parameters
+#  shell: |
+#    source /home/oracle/profile_o19tc.sh
+#    sqlplus / as sysdba <<EOF
+#    CREATE PFILE='/mnt/nfs_share/oracle/standby_bkp/init{{ primary_db }}.ora' FROM SPFILE;
+#    EXIT;
+#    EOF
+#  become_user: "{{ db_user }}"
+
+#- name: Ensure backup directory exists
+#  file:
+#    path: "/mnt/nfs_share/oracle/standby_bkp/{{ primary_db }}"
+#    state: directory
+#    owner: "{{ db_user }}"
+#    group: "oinstall"
+#    mode: '0755'
+#  
+#- name: Generate RMAN Backup Script
+#  template:
+#    src: rman_script.rcv.j2
+#    dest: /tmp/rman_script.rcv
+#    owner: "{{ db_user }}"
+#    group: "oinstall"
+#    mode: '0644'
+#
+#- name: Generate Backup Shell Script
+#  template:
+#    src: rman_backup.sh.j2
+#    dest: /tmp/rman_backup.sh
+#    owner: "{{ db_user }}"
+#    group: "oinstall"
+#    mode: '0755'
+#
+#- name: Execute RMAN Backup
+#  command: /tmp/rman_backup.sh
+#  become_user: "{{ db_user }}"

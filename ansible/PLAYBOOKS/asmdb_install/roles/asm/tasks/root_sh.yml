@@ -1,0 +1,12 @@
+---
+- name: Run grid orainstRoot.sh scripts 
+  command:
+    cmd: "sh {{ ORA_INVENTORY }}/orainstRoot.sh"
+  become: yes
+  become_user: root
+
+- name: Run grid root.sh
+  command:
+    cmd: "sh {{ GRID_HOME }}/root.sh"
+  become: yes
+  become_user: root

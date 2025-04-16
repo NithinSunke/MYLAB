@@ -1,0 +1,46 @@
+pv_disks:
+      - { device: "/dev/sdd", vg_name: "oem_vg", lv_name: "oem_lv", mount_point: "/u03" }
+oracle_hostname_short: oemsrv01
+oracle_hostname: "{{ oracle_hostname_short }}.scslabs.com"
+public_ip_address: 192.168.1.23
+oracle_base: /u01/app/oracle
+ora_inventory: /u01/app/oraInventory
+oracle_home_ext: product/19.0.0/dbhome_1
+oracle_home: "{{ oracle_base }}/{{ oracle_home_ext }}"
+mw_home: "/u03/oracle/middleware"
+agent_base: "/u03/oracle/agent"
+gc_inst: "/u03/oracle/gc_inst"
+unix_group_name: "oinstall"
+software_dir: "/mnt/nfs_share/oracle/soft/oem"
+software_library: "/u03/oracle/swlib"
+listener_port: "1521"
+oracle_sid: coem
+oracle_unqname: "{{ oracle_sid }}"
+sys_password: xxxxxxxxx
+pdb_name: oms
+pdb_password: xxxxxxxxxx
+wls_username: weblogic
+wls_password: Nxxxxx
+sysman_password: "{{ wls_password }}"
+agent_password: "{{ wls_password }}"
+
+oem_required_packages:
+  - binutils
+  - gcc
+  - gcc-c++
+  - glibc
+  - glibc-devel
+  - glibc-devel.i686
+  - libaio
+  - libaio-devel
+  - libgcc
+  - libstdc++
+  - libstdc++-devel
+  - libnsl
+  - sysstat
+  - motif
+  - motif-devel
+  - redhat-lsb
+  - redhat-lsb-core
+  - openssl
+  - make

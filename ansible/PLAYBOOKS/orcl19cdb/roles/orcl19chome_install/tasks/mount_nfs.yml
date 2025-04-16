@@ -1,0 +1,25 @@
+---
+- name: Install NFS utilities
+  yum:
+    name: nfs-utils
+    state: present
+
+- name: Create mount point
+  file:
+    path: "{{ nfs_mount_point }}"
+    state: directory
+
+- name: Mount NFS share
+  mount:
+    src: "{{ nfs_server }}:{{ nfs_exported_path }}"
+    path: "{{ nfs_mount_point }}"
+    fstype: nfs
+    state: mounted
+
+- name: Ensure NFS share is mounted on boot
+  mount:
+    src: "{{ nfs_server }}:{{ nfs_exported_path }}"
+    path: "{{ nfs_mount_point }}"
+    fstype: nfs
+    opts: defaults
+    state: present

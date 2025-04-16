@@ -1,0 +1,7 @@
+- name: Build response file for OEM installation
+  template:
+    src: install.rsp.j2
+    dest: "/tmp/install.rsp"
+    owner: oracle
+    group: oinstall
+    mode: '0644'

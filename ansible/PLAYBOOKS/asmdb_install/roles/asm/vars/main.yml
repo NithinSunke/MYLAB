@@ -1,0 +1,71 @@
+---
+pv_disks:
+      - { device: "/dev/sdb", vg_name: "db_vg", lv_name: "db_lv", mount_point: "/u01" }
+base_packages:
+  - dnf-utils
+  - zip
+  - unzip
+  - oracle-epel-release-el8
+  - sshpass
+  - oracle-database-preinstall-19c
+
+extra_packages:
+  - bc
+  - binutils
+  - elfutils-libelf
+  - elfutils-libelf-devel
+  - fontconfig-devel
+  - glibc
+  - glibc-devel
+  - ksh
+  - libaio
+  - libaio-devel
+  - libXrender
+  - libXrender-devel
+  - libX11
+  - libXau
+  - libXi
+  - libXtst
+  - libgcc
+  - librdmacm-devel
+  - libstdc++
+  - libstdc++-devel
+  - libxcb
+  - make
+  - net-tools
+  - nfs-utils
+  - targetcli
+  - smartmontools
+  - sysstat
+  - unixODBC
+  - libnsl
+  - libnsl.i686
+  - libnsl2
+  - libnsl2.i686
+ORACLE_PASSWORD: "oracle"
+asm_disks:
+  - device: "/dev/sdd"
+    symlink: "oracleasm/asm-crs-disk1"
+  - device: "/dev/sde"
+    symlink: "oracleasm/asm-data-disk1"
+  - device: "/dev/sdf"
+    symlink: "oracleasm/asm-reco-disk1"
+oracle_user: "oracle"
+oracle_group: "dba"
+ORACLE_BASE: "/u01/app/oracle"
+ORA_INVENTORY: "/u01/app/oraInventory"
+GRID_HOME: "/u01/app/19.0.0/grid"
+ORACLE_HOME: "/u01/app/oracle/product/19.0.0/dbhome_1"
+HOSTNAME: "oa19cdb01.scslabs.com"
+ORACLE_UNQNAME: "CASMDB"
+ORACLE_SID: "CASMDB"
+GRID_SOFTWARE: "LINUX.X64_193000_grid_home.zip"
+SOFTWARE_SRC: "/mnt/nfs_share/oracle/soft"
+CVUQDISK_RPM: "cv/rpm/cvuqdisk-1.0.10-1.rpm"
+ASM_OSDBA: "dba"
+ASM_OSOPER: "dba"
+ASM_OSASM: "dba"
+SYSASM_PASSWORD: "xxxx"
+ASM_DISKGROUP_NAME: "CRS"
+ASM_DISK: "/dev/oracleasm/asm-crs-disk1"
+ASM_DISK_DISCOVERY: "/dev/oracleasm/*"

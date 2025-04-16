@@ -1,0 +1,5 @@
+#!/bin/bash
+source /home/oracle/profile_{{ standby_db }}.sh
+export PATH=$ORACLE_HOME/bin:$PATH
+
+rman target / cmdfile=/tmp/final_rman_recovery.rcv log=/mnt/nfs_share/oracle/standby_bkp/{{ primary_db }}/final_dg_recovery.log

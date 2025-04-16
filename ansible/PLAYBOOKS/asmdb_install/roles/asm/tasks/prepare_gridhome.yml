@@ -1,0 +1,35 @@
+---
+- name: Ensure GRID_HOME directory exists
+  file:
+    path: "{{ GRID_HOME }}"
+    state: directory
+    owner: oracle
+    group: oinstall
+    mode: '0755'
+
+- name: Check if grid software is already extracted
+  stat:
+    path: "{{ GRID_HOME }}/gridSetup.sh"
+  register: grid_extracted
+
+- name: Unzip grid software if not already extracted
+  unarchive:
+    src: "{{ SOFTWARE_SRC }}/{{ GRID_SOFTWARE }}"
+    dest: "{{ GRID_HOME }}"
+    remote_src: yes
+    owner: oracle
+    group: oinstall
+    mode: '0755'
+  when: not grid_extracted.stat.exists
+
+- name: Check if cvuqdisk is already installed
+  shell: "rpm -q cvuqdisk"
+  register: cvuqdisk_installed
+  ignore_errors: yes
+  changed_when: false
+
+- name: Install cvuqdisk package if not installed
+  yum:
+    name: "{{ GRID_HOME }}/{{ CVUQDISK_RPM }}"
+    state: present
+

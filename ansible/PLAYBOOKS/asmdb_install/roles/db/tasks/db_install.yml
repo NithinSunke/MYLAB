@@ -1,0 +1,38 @@
+#- name: Ensure Oracle base and DB home directories exist
+#  file:
+#    path: "{{ ORACLE_HOME }}"
+#    state: directory
+#    owner: oracle
+#    group: oinstall
+#    mode: '0755'
+    
+#- name: Unzip Oracle Database software
+#  unarchive:
+#    src: "/mnt/nfs_share/oracle/soft/{{ DB_SOFTWARE }}"
+#    dest: "{{ ORACLE_HOME }}"
+#    remote_src: yes
+#    owner: oracle
+#    group: oinstall
+#  become: yes
+#  become_user: oracle
+
+- name: Generate Oracle Database response file
+  template:
+    src: "db_install.rsp.j2"
+    dest: "{{ ORACLE_HOME }}/install/response/db_install.rsp"
+    owner: oracle
+    group: oinstall
+    mode: '0644'
+
+- name: Install Oracle Database Software in Silent Mode
+  shell: >
+    source /home/oracle/setEnv.sh &&
+    {{ ORACLE_HOME }}/runInstaller -silent -responseFile {{ ORACLE_HOME }}/install/response/db_install.rsp
+  become: yes
+  become_user: oracle
+  register: db_install
+
+- name: Debug installation output
+  debug:
+    msg: "{{ db_install.stdout_lines }}"
+  

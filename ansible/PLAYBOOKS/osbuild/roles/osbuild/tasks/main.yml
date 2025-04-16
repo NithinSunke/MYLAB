@@ -1,0 +1,13 @@
+---
+- name: setup oracle linux server
+  debug:
+    msg:
+      - 'This playbook is for setup oracle linux server, started at {{ansible_date_time.iso8601}}:'
+
+- name: Preparation tasks for server setup
+  block:
+    - import_tasks: change_hostname.yml
+    - import_tasks: configure_network.yml 
+    - import_tasks: groups_users.yml
+    - import_tasks: patch_server.yml
+    - import_tasks: reboot_server.yml

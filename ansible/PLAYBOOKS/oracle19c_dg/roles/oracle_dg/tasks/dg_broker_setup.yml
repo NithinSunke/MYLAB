@@ -1,0 +1,27 @@
+- name: update dg broker parameter
+  shell: |
+    source /home/oracle/profile_o19tcsb.sh
+    sqlplus / as sysdba <<EOF
+    alter system set dg_broker_start=TRUE SCOPE=BOTH;
+    exit;
+    EOF
+  become: yes
+  become_user: "{{ db_user }}"
+
+- name: Create Data Guard Configuration
+  shell: |
+    source /home/oracle/profile_o19tcsb.sh
+    dgmgrl sys/{{ sys_pwd }}@{{ primary_db }} <<EOF
+    create configuration o19tc_cfg as primary database is {{ primary_db }} connect identifier is {{ primary_db }};
+    add database {{ standby_db }} as connect identifier is {{ standby_db }} MAINTAINED AS PHYSICAL;
+    show configuration;
+    enable configuration;
+    show configuration;
+    EXIT;
+    EOF
+  register: dg_output
+  failed_when: dg_output.rc > 0
+
+- name: Display Data Guard Configuration Output
+  debug:
+    msg: "{{ dg_output.stdout_lines }}"

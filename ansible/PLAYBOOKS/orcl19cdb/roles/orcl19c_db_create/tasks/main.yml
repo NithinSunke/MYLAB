@@ -1,0 +1,10 @@
+---
+- name: setup oracle linux server for Oracle 19c DB installation
+  debug:
+    msg:
+      - 'This playbook is for setup oracle linux server for Oracle 19c   DB installation , started at {{ansible_date_time.iso8601}}:'
+
+- name: Preparation tasks for server setup
+  block:
+    - import_tasks: createdb.yml
+    - import_tasks: create_listener.yml

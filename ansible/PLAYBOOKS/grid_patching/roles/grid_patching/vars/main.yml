@@ -1,0 +1,16 @@
+oracle_home: "/u01/app/oracle/product/19.0.0/dbhome_1"
+grid_home: "/u01/app/19.0.0/grid"
+patch_location: "/mnt/nfs_share/oracle/soft/patches/36916690"
+patch_id: "36916690"
+opatch_version: "12.2.0.1.45"
+patch_zip_file: "p36916690_190000_Linux-x86-64.zip"
+patch_extract_dir: "/mnt/nfs_share/oracle/soft/patches"
+patch_ids1:
+  - "36912597"
+  - "36917416"
+  - "36917397"
+  - "36940756"
+  - "36758186"
+patch_ids2:
+  - "36912597"
+  - "36917416"

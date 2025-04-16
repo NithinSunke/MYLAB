@@ -1,0 +1,6 @@
+- name: Join AD
+  hosts: all
+  become: yes
+
+  roles:
+    - ad_join

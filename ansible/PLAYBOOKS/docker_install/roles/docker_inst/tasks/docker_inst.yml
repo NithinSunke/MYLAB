@@ -1,0 +1,54 @@
+---
+- name: Ensure system is up to date
+  dnf:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: Install prerequisites
+  dnf:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    state: present
+
+- name: Add Docker repository
+  command: >
+    dnf config-manager
+    --add-repo
+    {{ docker_repo_url }}
+  args:
+    creates: /etc/yum.repos.d/docker-ce.repo
+
+- name: Enable required repositories
+  shell: |
+    sudo dnf config-manager --enable ol8_baseos_latest
+    sudo dnf config-manager --enable ol8_appstream
+    sudo dnf config-manager --enable ol8_addons
+  args:
+    warn: false
+
+- name: Install Docker packages
+  dnf:
+    name: "{{ docker_packages }}"
+    state: present
+
+- name: Start and enable Docker service
+  service:
+    name: "{{ docker_service }}"
+    state: started
+    enabled: true
+
+- name: Add user to Docker group
+  user:
+    name: "{{ docker_user }}"
+    groups: docker
+    append: yes
+
+- name: Verify Docker installation
+  shell: docker --version
+  register: docker_version
+
+- debug:
+    msg: "Docker version: {{ docker_version.stdout }}"

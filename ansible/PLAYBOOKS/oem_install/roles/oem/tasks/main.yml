@@ -1,0 +1,15 @@
+---
+- name: setup oem 13c installation
+  debug:
+    msg:
+      - 'This playbook is for setup oem 13c installation , started at {{ansible_date_time.iso8601}}:'
+
+- name: Preparation tasks for oem 13c setup
+  block:
+#    - import_tasks: prepare_disk_lvm.yml
+#    - import_tasks: os_packages.yml
+#    - import_tasks: create_dirs.yml
+#    - import_tasks: generate_response_file.yml
+    - import_tasks: em_install.yml
+
+    

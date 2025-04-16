@@ -1,0 +1,40 @@
+---
+- name: Create environment script
+  copy:
+    dest: "/home/oracle/profile_{{ ORACLE_SID }}.sh"
+    content: |
+      # Regular settings.
+      export TMP=/tmp
+      export TMPDIR=$TMP
+      export ORACLE_HOSTNAME={{ hostname }}
+      export ORACLE_BASE={{ ORACLE_BASE }}
+      export ORACLE_HOME={{ ORACLE_HOME }}
+      export ORACLE_SID={{ ORACLE_SID }}
+      export PATH=/usr/sbin:/usr/local/bin:$PATH
+      export PATH=$ORACLE_HOME/bin:$PATH
+      export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
+      export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
+      export ORA_INVENTORY={{ ORA_INVENTORY }}
+      export CV_ASSUME_DISTID=OEL7.8
+
+- name: Add environment script to .bash_profile
+  lineinfile:
+    path: /home/oracle/.bash_profile
+    line: ". /home/oracle/profile_{{ ORACLE_SID }}.sh"
+    state: present
+- name: Change ownership of scripts directory
+  file:
+    path: "/home/oracle"
+    owner: oracle
+    group: oinstall
+    recurse: yes
+
+- name: Change ownership of directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "oracle"
+    group: "oinstall"
+    recurse: yes
+  with_items:
+    - /u01
+    - /u02

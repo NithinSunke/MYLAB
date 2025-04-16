@@ -1,0 +1,8 @@
+ORACLE_HOME: "/u01/app/oracle/product/19.0.0/dbhome_1"
+DB_SOFTWARE: "LINUX.X64_193000_db_home.zip"
+oracle_unqname: "CASMDB"
+pdb_name: "CASM_PDB1"
+sys_password: "xxxxxxxx"
+storage_type: "ASM"
+disk_group_name: "+DATA"
+recovery_group_name: "+RECO"

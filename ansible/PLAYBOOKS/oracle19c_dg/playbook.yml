@@ -1,0 +1,6 @@
+---
+- name: Configure Oracle Data Guard
+  hosts: all_db_servers
+  become: yes
+  roles:
+    - oracle_dg
