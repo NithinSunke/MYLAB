@@ -23,7 +23,7 @@ variable "availability_domain" {
 variable "compartment_id" {
   description = "Compartment ID where the compute instance will be created"
   type        = string
-  default     = "ocid1.compartment.oc1..aaaaaaaa7gchw5gn5d3i3wig74mkp5qtfhae2qrgqpkrhksx45vuwihjfssa"
+  default     = "ocid1.compartment.oc1..aaaaaaajfssa"
 }
 
 #variable for shape
@@ -80,7 +80,7 @@ variable "ssh_public_key_path" {
 variable "subnet_id" {
   description = "Subnet ID for the compute instance"
   type        = string
-  default     = "ocid1.subnet.oc1.phx.aaaaaaaawdxdkyqtcx4klquqhmgdjdboylmmew667kjiuqvh563d4wixx66q"
+  default     = "ocid1.subnet.oc1.phx.aaaaaaaaw4wixx66q"
 }
 
 # Block Volume variables

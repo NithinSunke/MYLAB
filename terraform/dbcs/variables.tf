@@ -14,7 +14,7 @@ variable "profile" {
 variable "compartment_id" {
   description = "The OCID of the compartment to deploy the resources in"
   type        = string
-  default     = "ocid1.compartment.oc1..aaaaaaaa7gchw5gn5d3i3wig74mkp5qtfhae2qrgqpkrhksx45vuwihjfssa"
+  default     = "ocid1.compartment.oc1..aajfssa"
 }
 #variables for availability domain
 variable "availability_domain" {
@@ -26,7 +26,7 @@ variable "availability_domain" {
 variable "subnet_id" {
   description = "The OCID of the subnet to deploy the resources in"
   type        = string
-  default     = "ocid1.subnet.oc1.me-jeddah-1.aaaaaaaar7voipnr2ygh6v3limr4n7lcudpv7zfynpmb5k64e4ihx4cuxtra"
+  default     = "ocid1.subnet.oc1.me-jeddah-1.aaaaaaaar7vocuxtra"
 }
 #variables for ssh_public_key
 variable "ssh_public_key_path" {
@@ -99,7 +99,7 @@ variable "db_name" {
 variable "admin_password" {
   description = "The password for the database admin user"
   type        = string
-  default     = "Nevi#Nihaan#0712" # Replace with your desired default value
+  default     = "xxxxxxxxxxx" # Replace with your desired default value
 }
 #variable for character_set
 variable "character_set" {

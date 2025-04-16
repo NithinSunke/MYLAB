@@ -15,7 +15,7 @@ variable "profile" {
 variable "compartment_id" {
   description = "The OCID of the compartment where the bastion will be created"
   type        = string
-  default     = "ocid1.compartment.oc1..aaaaaaaa7gchw5gn5d3i3wig74mkp5qtfhae2qrgqpkrhksx45vuwihjfssa"
+  default     = "ocid1.compartment.oc1..jfssa"
 }
 
 variable "vault_name" {

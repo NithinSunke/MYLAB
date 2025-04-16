@@ -14,7 +14,7 @@ variable "region" {
 variable "compartment_id" {
   description = "Compartment OCID"
   type        = string
-  default     = "ocid1.compartment.oc1..aaaaaaaa3bsnwqvif5r4gxzd6o5kd46jiwfdxly4v7pswkmvxkqoa34u4esa"
+  default     = "ocid1.compartment.oc1..aaaa.........4esa"
 }
 
 variable "my_ip" {

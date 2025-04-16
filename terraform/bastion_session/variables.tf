@@ -15,14 +15,14 @@ variable "profile" {
 variable "bastion_id" {
   description = "The OCID of the bastion"
   type        = string
-  default     = "ocid1.bastion.oc1.us-sanjose-1.amaaaaaazjgvoqya3evy7xez54gllogoloetzlzz2463cbfdscnshbcc5v3a"
+  default     = "ocid1.bastion.oc1.us-sanjose-1.5v3a"
 }
 
 #variables for ssh_public_key
 variable "ssh_public_key_path" {
   description = "The path to the SSH public key file"
   type        = string
-  default     = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCvtOpdSoFSR9ca/R4Xv2pXjBLLKrqHrsJGkoVUGtSYmtBJ4ypWI+86bP+DDyCTFbuKYKH2TbtHPjemCAE+aKqBj/BNLcM5k+Uif69Np/yZjRt4T1Rv5M1yFUVid2tkGIB1IWaE0P1ZAB8h9Dhx44ouKxXd37YvZ8u9Al9oWkJCD6S9pMPgOT5B1Ckl9GTjkeMl/pkkEHKGo3i4Py57C1gh3cL06f6WRWjX6GH7XjYL9KvSYpsQUmAfWleKOJhRj0EPzOyICCOvy7nGJhEbFwvKvzxsGYYbxjJ2tRhXLAP9mw6LwxmB/GJL/LaPYYDur86x6pLv5Eez7X9PD9j6NNlL"
+  default     = "ssh-rsa AAAAB.....6NNlL"
 }
 
 #variable for session_type
@@ -68,5 +68,5 @@ variable "session_ttl_in_seconds" {
 variable "target_resource_id" {
   description = "The OCID of the target resource for the session"
   type        = string
-  default     = "ocid1.instance.oc1.us-sanjose-1.anzwuljrzjgvoqycqh5szbvwjqgm4tfyhqgln5aks2gdkmthczlp5h2w566q"
+  default     = "ocid1.instance.oc1.us-sanjose-1.anz........w566q"
 }
