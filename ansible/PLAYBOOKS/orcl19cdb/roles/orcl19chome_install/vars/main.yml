@@ -2,7 +2,7 @@ DOMAIN_NAME: "scslabs.com"
 ORACLE_TERM: "xterm"
 oracle_user:  "oracle"
 root_user: root
-hostname:      "oemsrv01.scslabs.com"
+hostname:      "o19cdb01.scslabs.com"
 ORACLE_BASE: /u01/app/oracle
 ORA_INVENTORY: /u01/app/oraInventory
 ora_languages: en
@@ -13,8 +13,8 @@ DB_SOFTWARE: "LINUX.X64_193000_db_home.zip"
 pv_disks:
       - { device: "/dev/sdb", vg_name: "db_vg", lv_name: "db_lv", mount_point: "/u01" }
       - { device: "/dev/sdc", vg_name: "data_vg", lv_name: "data_lv", mount_point: "/u02" }
-nfs_server: "truenas.scslabs.com"
-nfs_exported_path: "/mnt/VMPOOL/NFSSHARE"
-nfs_mount_point: "/mnt/nfs_share"
+nfs_server: "homelab.scslabs.com"
+nfs_exported_path: "/nfsshare"
+nfs_mount_point: "/mnt/nfsshare"
 ORACLE_PASSWORD: "oracle"
-ORACLE_SID: "coem"
+ORACLE_SID: "o19cdb"

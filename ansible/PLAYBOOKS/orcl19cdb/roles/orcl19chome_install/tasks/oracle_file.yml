@@ -15,9 +15,11 @@
   become: yes
   become_user: oracle
   unarchive:
-    src: "/mnt/nfs_share/oracle/soft/LINUX.X64_193000_db_home.zip"
+    src: "/mnt/nfsshare/oracle/soft/LINUX.X64_193000_db_home.zip"
     dest: "{{ ORACLE_HOME }}"
     remote_src: yes
+
+
 
 - name: ownership of  oracle home directory
   file:

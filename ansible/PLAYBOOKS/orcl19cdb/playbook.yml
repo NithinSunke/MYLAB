@@ -3,5 +3,5 @@
   hosts: oel
   become: yes
   roles:
-    - orcl19chome_install
-#    - orcl19c_db_create
+#    - orcl19chome_install
+    - orcl19c_db_create

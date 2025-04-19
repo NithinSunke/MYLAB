@@ -6,5 +6,5 @@
 
 - name: Preparation tasks for server setup
   block:
-    - import_tasks: createdb.yml
+#    - import_tasks: createdb.yml
     - import_tasks: create_listener.yml
