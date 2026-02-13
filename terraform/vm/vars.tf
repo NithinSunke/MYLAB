@@ -1,0 +1,9 @@
+variable compartment_ocid { default = "ocid1.compartment.oc1..aaaaaaaakqe4kee2upcos76wmvt4vlm7xiw5gbdaceqtvlkfemdotj7q5x4a" }
+variable oci_core_instance--source_details-source_id--export_carrefour-jump { default = "ocid1.image.oc1.me-jeddah-1.aaaaaaaa2begtbznj2rkkl4kdda4fdllz53x55ajrbyjylhzpn5wwysptcfq" }
+variable fault_domain1 { default = "FAULT-DOMAIN-1" }
+variable fault_domain2 { default = "FAULT-DOMAIN-2" }
+variable region { default = "me-jeddah-1" }
+variable oci_core_instance--source_details-source_id--export_nosqljump { default = "ocid1.image.oc1.me-jeddah-1.aaaaaaaa2begtbznj2rkkl4kdda4fdllz53x55ajrbyjylhzpn5wwysptcfq" }
+variable oci_core_instance--source_details-source_id--export_orclprdg01 { default = "ocid1.image.oc1..aaaaaaaa4vx4siae6jtbht7ffgpic32rat7m4gyrzai3cric6fdldv2wtafq" }
+variable oci_core_instance--source_details-source_id--export_orclsbdg01 { default = "ocid1.image.oc1..aaaaaaaa4vx4siae6jtbht7ffgpic32rat7m4gyrzai3cric6fdldv2wtafq" }
+variable availability_domain--kWcK-ME-JEDDAH-1-AD-1 { default = "kWcK:ME-JEDDAH-1-AD-1" }
