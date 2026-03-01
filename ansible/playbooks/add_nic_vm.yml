@@ -1,0 +1,5 @@
+- name: Add Additional nics to vm
+  hosts: proxmox
+  gather_facts: false
+  roles:
+    - add_nic_vm

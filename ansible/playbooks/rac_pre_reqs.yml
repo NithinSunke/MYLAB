@@ -1,0 +1,5 @@
+- name: Configure RAC Shared Storage
+  hosts: racnodes
+  become: yes
+  roles:
+    - rac_pre_reqs

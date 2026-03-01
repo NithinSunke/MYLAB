@@ -1,0 +1,47 @@
+- name: Create grid volume group
+  community.general.lvg:
+    vg: "{{ grid_vg }}"
+    pvs: "{{ grid_disk }}"
+
+- name: Create grid logical volume
+  community.general.lvol:
+    vg: "{{ grid_vg }}"
+    lv: "{{ grid_lv }}"
+    size: 100%FREE
+
+- name: Create db volume group
+  community.general.lvg:
+    vg: "{{ db_vg }}"
+    pvs: "{{ db_disk }}"
+
+- name: Create db logical volume
+  community.general.lvol:
+    vg: "{{ db_vg }}"
+    lv: "{{ db_lv }}"
+    size: 100%FREE
+    
+- name: Create XFS filesystem for grid
+  filesystem:
+    fstype: xfs
+    dev: "/dev/{{ grid_vg }}/{{ grid_lv }}"
+
+- name: Create XFS filesystem for db
+  filesystem:
+    fstype: xfs
+    dev: "/dev/{{ db_vg }}/{{ db_lv }}"
+
+- name: Mount grid filesystem
+  mount:
+    path: "{{ grid_mount }}"
+    src: "/dev/{{ grid_vg }}/{{ grid_lv }}"
+    fstype: xfs
+    opts: defaults
+    state: mounted
+
+- name: Mount db filesystem
+  mount:
+    path: "{{ db_mount }}"
+    src: "/dev/{{ db_vg }}/{{ db_lv }}"
+    fstype: xfs
+    opts: defaults
+    state: mounted

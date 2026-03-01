@@ -1,0 +1,68 @@
+- name: Create Grid directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ grid_user }}"
+    group: oinstall
+    mode: 0775
+  loop:
+    - "{{ grid_base }}"
+    - "{{ grid_home }}"
+    - "{{ inventory_location }}"
+
+- name: Unzip Grid software
+  become_user: "{{ grid_user }}"
+  unarchive:
+    src: /mnt/nfsshare/softs/LINUX.X64_2326100_grid_home.zip
+    dest: "{{ grid_home }}"
+    remote_src: yes
+
+- name: Create Grid response file
+  copy:
+    dest: /home/grid/grid_install.rsp
+    owner: grid
+    group: oinstall
+    mode: '0600'
+    content: |
+      oracle.install.responseFileVersion=/oracle/install/rspfmt_crsinstall_response_schema_v23.0.0
+      INVENTORY_LOCATION={{ inventory_location }}
+      installOption=HA_CONFIG
+      ORACLE_BASE={{ grid_base }}
+      clusterUsage=GENERAL_PURPOSE
+      OSDBA=asmdba
+      OSOPER=asmoper
+      OSASM=asmadmin
+      sysasmPassword={{ asm_password }}
+      diskGroupName=CRS
+      redundancy=EXTERNAL
+      auSize=4
+      diskList={{ crs_disk }}
+      diskString=/dev/sd*
+      asmsnmpPassword={{ asm_password }}
+      executeRootScript=false
+
+- name: Install Grid silently
+  become_user: "{{ grid_user }}"
+  shell: |
+    {{ grid_home }}/gridSetup.sh -silent -responseFile /home/grid/grid_install.rsp -ignorePrereqFailure
+  register: grid_install
+  failed_when: grid_install.rc not in [0,6]
+  changed_when: grid_install.rc in [0,6]
+ 
+- name: Run orainstRoot
+  shell: "{{ inventory_location }}/orainstRoot.sh"
+- name: Run grid root.sh
+  shell: "{{ grid_home }}/root.sh"
+
+- name: Execute Grid Config Tools
+  become_user: "{{ grid_user }}"
+  shell: |
+    /u01/app/26ai/grid/gridSetup.sh -silent -executeConfigTools -responseFile /home/grid/grid_install.rsp
+  register: grid_config
+  failed_when: grid_config.rc not in [0,6]
+  changed_when: grid_config.rc in [0,6]
+
+- name: Create DATA diskgroup
+  become_user: "{{ grid_user }}"
+  shell: |
+    {{ grid_home }}/bin/asmca -silent -createDiskGroup -diskGroupName DATA -disk '{{ data_disk }}' -redundancy EXTERNAL

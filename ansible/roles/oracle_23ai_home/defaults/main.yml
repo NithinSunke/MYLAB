@@ -1,0 +1,13 @@
+oracle_user: oracle
+oracle_group: oinstall
+oracle_dba_group: dba
+
+oracle_base: /u01/app/oracle
+oracle_home: /u01/app/oracle/product/23ai/dbhome_1
+oracle_inventory: /u01/app/oraInventory
+
+oracle_stage_dir: /u01/stage/oracle23ai
+oracle_install_src_loc: /mnt/nfsshare/softs
+oracle_install_zip: /mnt/nfsshare/softs/LINUX.X64_2326100_db_home.zip
+
+oracle_edition: EE

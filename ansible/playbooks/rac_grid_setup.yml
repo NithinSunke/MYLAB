@@ -1,0 +1,45 @@
+- name: RAC Grid Installation
+  hosts: racnodes
+  become: yes
+  roles:
+    - rac_grid_install
+
+- name: Run Root Scripts Sequentially
+  hosts: racnodes
+  become: yes
+  serial: 1
+  vars:
+    ora_inventory: /u01/app/oraInventory
+    grid_home: /u01/app/26ai/grid
+  tasks:
+    - name: Run orainstRoot.sh
+      shell: "{{ ora_inventory }}/orainstRoot.sh"
+    - name: Run grid root.sh
+      shell: "{{ grid_home }}/root.sh"
+
+- name: Execute Grid Configuration
+  hosts: o9o26airac01
+  roles:
+    - rac_grid_config
+
+- name: Add ASM entry to /etc/oratab
+  hosts: racnodes
+  become: yes
+  vars:
+    asm_sid:
+      o9o26airac01: "+ASM1"
+      o9o26airac02: "+ASM2"
+  tasks:
+    - name: Add correct ASM entry
+      lineinfile:
+        path: /etc/oratab
+        line: "{{ asm_sid[inventory_hostname] }}:/u01/app/26ai/grid:N"
+        regexp: '^{{ asm_sid[inventory_hostname] | regex_escape }}:'
+        state: present
+        insertafter: EOF
+        backup: yes
+
+- name: Execute Grid Configuration
+  hosts: o9o26airac01
+  roles:
+    - rac_grid_dg

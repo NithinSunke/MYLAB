@@ -1,7 +1,0 @@
----
-- name: oracle 19c database setup
-  hosts: oel
-  become: yes
-  roles:
-#    - orcl19chome_install
-    - orcl19c_db_create

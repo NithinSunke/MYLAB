@@ -1,0 +1,108 @@
+---
+################################################################################
+## OS PRE-REQS
+################################################################################
+- name: Install OS prerequisite packages
+  package:
+    name:
+      - binutils
+      - gcc
+      - gcc-c++
+      - glibc
+      - glibc-devel
+      - libaio
+      - libaio-devel
+      - ksh
+      - make
+      - sysstat
+      - unzip
+      - libxcrypt-compat
+    state: present
+
+################################################################################
+## USERS & GROUPS
+################################################################################
+- name: Create oracle groups
+  group:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - "{{ oracle_group }}"
+    - "{{ oracle_dba_group }}"
+
+- name: Create oracle user
+  user:
+    name: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"     
+    groups: "{{ oracle_dba_group }}"
+    append: yes
+    state: present
+
+
+
+################################################################################
+# DIRECTORIES
+################################################################################
+- name: Create Oracle directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+    mode: '0755'
+  loop:
+    - "{{ oracle_base }}"
+    - "{{ oracle_home }}"
+    - "{{ oracle_inventory }}"
+    - "{{ oracle_stage_dir }}"
+
+################################################################################
+# STAGE SOFTWARE
+################################################################################
+- name: Unzip Oracle software
+  ansible.builtin.shell:
+    cmd: unzip -oq {{ oracle_install_zip }} -d {{ oracle_home }}
+  become_user: "{{ oracle_user }}"
+  args:
+    creates: "{{ oracle_home }}/runInstaller"
+
+###############################################################################
+# INSTALL ORACLE HOME
+###############################################################################
+- name: Generate response file
+  template:
+    src: db_install.rsp.j2
+    dest: "{{ oracle_stage_dir }}/db_install.rsp"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_group }}"
+    mode: '0644'
+
+- name: Run Oracle installer (silent)
+  ansible.builtin.shell:
+    cmd: |
+      {{ oracle_home }}/runInstaller \
+        -silent \
+        -responseFile {{ oracle_stage_dir }}/db_install.rsp \
+        -ignorePrereqFailure \
+        -waitforcompletion
+  become_user: "{{ oracle_user }}"
+  register: oracle_install
+  failed_when: oracle_install.rc not in [0, 6]
+  args:
+    creates: "{{ oracle_inventory }}/ContentsXML/inventory.xml"
+
+
+###############################################################################
+# ROOT SCRIPTS
+###############################################################################
+- name: Run orainstRoot.sh
+  ansible.builtin.shell:
+    cmd: "{{ oracle_inventory }}/orainstRoot.sh"
+  args:
+    creates: /etc/oraInst.loc
+
+- name: Run root.sh
+  ansible.builtin.shell:
+    cmd: "{{ oracle_home }}/root.sh"
+  args:
+    creates: /etc/oratab

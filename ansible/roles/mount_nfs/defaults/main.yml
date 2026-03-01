@@ -1,0 +1,4 @@
+nfs_server: "192.168.1.12"
+nfs_share: "/mnt/storage/nfs-share"
+nfs_mount_point: "/mnt/nfsshare"
+nfs_mount_opts: "defaults,_netdev"

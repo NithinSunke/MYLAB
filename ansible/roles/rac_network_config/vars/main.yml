@@ -1,0 +1,23 @@
+# ------------------------------------------------
+# VM Definitions
+# ------------------------------------------------
+vms:
+  - vmid: 111
+    vm_name: o9o26airac01
+    public_ip: 192.168.1.17
+    private_ip: 10.0.0.17
+    san_ip: 172.16.0.17
+
+  - vmid: 112
+    vm_name: o9o26airac02
+    public_ip: 192.168.1.18
+    private_ip: 10.0.0.18
+    san_ip: 172.16.0.18
+
+# ------------------------------------------------
+# Network Settings
+# ------------------------------------------------
+netmask: 24
+private_interface: eth1
+san_interface: eth2
+

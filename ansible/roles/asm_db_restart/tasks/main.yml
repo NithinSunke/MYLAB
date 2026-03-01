@@ -1,0 +1,8 @@
+- include_tasks: update.yml
+- include_tasks: users_groups.yml
+- include_tasks: lvm.yml
+- include_tasks: directories.yml
+- include_tasks: asm_udev.yml
+- include_tasks: grid_install.yml
+- include_tasks: db_install.yml
+- include_tasks: db_create.yml

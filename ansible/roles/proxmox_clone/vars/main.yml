@@ -1,0 +1,13 @@
+template_vmid: 106
+new_vmid: 110
+vm_name: o9od23ai01
+target_node: pve
+storage: vmdata
+cores: 2
+memory_mb: 2048
+ip_addr: 192.168.1.14/24
+vm_ip: 192.168.1.14
+gateway: 192.168.1.1
+ci_user: nsunke
+ci_password: nithin
+ssh_key_file: /root/.ssh/id_rsa.pub

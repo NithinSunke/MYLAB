@@ -1,0 +1,87 @@
+############################################################
+# Get WWID of each multipath device
+############################################################
+
+- name: Get WWID of ASM multipath devices
+  command: /lib/udev/scsi_id --whitelisted --device=/dev/{{ item.device }}
+  register: asm_wwids
+  loop: "{{ asm_disk_devices }}"
+  changed_when: false
+
+############################################################
+# Build structured ASM disk list
+############################################################
+
+- name: Build ASM disk structure
+  set_fact:
+    asm_disks: >-
+      {{
+        asm_disks | default([]) + [
+          {
+            'name': item.item.name,
+            'dm_uuid': 'mpath-' + item.stdout
+          }
+        ]
+      }}
+  loop: "{{ asm_wwids.results }}"
+
+############################################################
+# Create udev rules file
+############################################################
+
+- name: Create ASM udev rules file
+  copy:
+    dest: /etc/udev/rules.d/99-oracle-asm.rules
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      {% for disk in asm_disks %}
+      ACTION=="add|change", KERNEL=="dm-*", ENV{DM_UUID}=="{{ disk.dm_uuid }}", OWNER="grid", GROUP="asmdba", MODE="0660", SYMLINK+="{{ disk.name }}"
+      {% endfor %}
+
+############################################################
+# Reload and trigger udev
+############################################################
+
+- name: Reload udev rules
+  command: udevadm control --reload-rules
+
+- name: Trigger block devices
+  command: udevadm trigger --subsystem-match=block
+
+############################################################
+# Wait for ASM device symlinks
+############################################################
+
+- name: Wait for ASM device links
+  wait_for:
+    path: "/dev/{{ item.name }}"
+    state: present
+    timeout: 15
+  loop: "{{ asm_disks }}"
+
+############################################################
+# Ensure correct ownership (safety enforcement)
+############################################################
+
+- name: Ensure correct ownership on ASM devices
+  file:
+    path: "/dev/{{ item.name }}"
+    owner: grid
+    group: asmdba
+    mode: '0660'
+  loop: "{{ asm_disks }}"
+
+############################################################
+# Verification (non-failing)
+############################################################
+
+- name: Verify ASM device links
+  shell: ls -l /dev/asm-* 2>/dev/null || true
+  register: asm_verify
+  changed_when: false
+
+- name: Display ASM device details
+  debug:
+    var: asm_verify.stdout_lines

@@ -1,0 +1,46 @@
+- name: Install Oracle Grid Infrastructure (Silent)
+  become: yes
+  become_user: grid
+  shell: >
+    {{ grid_home }}/gridSetup.sh
+    -ignorePrereq
+    -waitforcompletion
+    -silent
+    -responseFile {{ grid_home }}/install/response/gridsetup.rsp
+    INVENTORY_LOCATION={{ ora_inventory }}
+    oracle.install.option=CRS_CONFIG
+    ORACLE_BASE={{ grid_base }}
+    oracle.install.asm.OSDBA=asmdba
+    oracle.install.asm.OSASM=asmadmin
+    oracle.install.crs.config.scanType=LOCAL_SCAN
+    oracle.install.crs.config.gpnp.scanName={{ scan_name }}
+    oracle.install.crs.config.gpnp.scanPort={{ scan_port }}
+    oracle.install.crs.config.ClusterConfiguration=STANDALONE
+    oracle.install.crs.config.clusterName={{ cluster_name }}
+    oracle.install.crs.config.autoConfigureClusterNodeVIP=false
+    oracle.install.crs.config.clusterNodes={{ node1_fq }}:{{ node1_vip }}:HUB,{{ node2_fq }}:{{ node2_vip }}:HUB
+    oracle.install.crs.config.networkInterfaceList={{ public_if }}:{{ public_subnet }}:1,{{ private_if }}:{{ private_subnet }}:5
+    oracle.install.crs.configureGIMR=false
+    oracle.install.crs.config.storageOption=FLEX_ASM_STORAGE
+    oracle.install.asm.storageOption=ASM
+    oracle.install.asm.diskGroup.name=CRS
+    oracle.install.asm.diskGroup.redundancy=EXTERNAL
+    oracle.install.asm.diskGroup.disks=/dev/asm-crs
+    oracle.install.asm.diskGroup.diskDiscoveryString=/dev/asm-*
+    oracle.install.asm.SYSASMPassword={{ sys_password }}
+    oracle.install.asm.monitorPassword={{ sys_password }}
+    oracle.install.crs.rootconfig.executeRootScript=false
+  register: grid_install
+  async: 7200
+  poll: 20
+  run_once: true
+  when: inventory_hostname == groups['racnodes'][0]
+  ignore_errors: yes
+
+
+- name: Save grid install output
+  copy:
+    content: "{{ grid_install.stdout }}"
+    dest: /tmp/grid_install.log
+  run_once: true
+  when: inventory_hostname == groups['racnodes'][0]

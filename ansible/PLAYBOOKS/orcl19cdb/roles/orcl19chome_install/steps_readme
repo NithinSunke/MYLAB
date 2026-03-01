@@ -1,8 +1,0 @@
-prereqs:
-1) first run inital_os_build job
-ansible-playbook -i /u01/HOMELAB/ansible/inventory/oel.ini --ask-vault-pass inital_os_build.yml 
-2) from truenas creat the luns
-3) run iscsi job iscsi_multipath_install
-ansible-playbook -i /u01/HOMELAB/ansible/inventory/oel.ini --ask-vault-pass iscsi_multipath_install.yml 
-4) run the main db install job oracle19cdb
- ansible-playbook -i /u01/HOMELAB/ansible/inventory/oel.ini --ask-vault-pass oracle19cdb.yml 

@@ -1,8 +1,0 @@
----
-- name: Execute ASM Disk Group Creation Script
-  command: /mnt/nfs_share/oracle/scripts/create_asm_diskgroups.sh
-  become_user: root
-  register: asm_creation_output
-- name: Display Output of ASM Disk Group Creation
-  debug:
-    var: asm_creation_output.stdout_lines

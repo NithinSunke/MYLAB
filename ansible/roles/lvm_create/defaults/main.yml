@@ -1,0 +1,16 @@
+lvm_layout:
+  - disk: /dev/sdb
+    vg: vg_dbhome
+    lv:
+      name: lv_dbhome
+      size: 24G
+      fs: xfs
+      mount: /u01
+
+  - disk: /dev/sdc
+    vg: vg_data_fra
+    lv:
+      name: lv_data_fra
+      size: 24G
+      fs: xfs
+      mount: /u02

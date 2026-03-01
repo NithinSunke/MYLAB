@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#set -euo pipefail
+
+TEMPLATE_VMID="{{ template_vmid }}"
+NEW_VMID="{{ new_vmid }}"
+VM_NAME="{{ vm_name | lower | replace('_','-') }}"
+TARGET_NODE="{{ target_node }}"
+STORAGE="{{ storage }}"
+CORES="{{ cores }}"
+MEMORY_MB="{{ memory_mb }}"
+IP_ADDR="{{ ip_addr }}"
+GATEWAY="{{ gateway }}"
+CI_USER="{{ ci_user }}"
+CI_PASSWORD="{{ ci_password }}"
+SSH_KEY_FILE="{{ ssh_key_file }}"
+
+if qm status "$NEW_VMID" &>/dev/null; then
+  echo "ERROR: VMID $NEW_VMID already exists"
+  exit 1
+fi
+
+qm clone "$TEMPLATE_VMID" "$NEW_VMID" \
+  --name "$VM_NAME" \
+  --full 1 \
+  --target "$TARGET_NODE" \
+  --storage "$STORAGE"
+
+qm set "$NEW_VMID" \
+  --cores "$CORES" \
+  --memory "$MEMORY_MB"
+
+qm set "$NEW_VMID" \
+  --ciuser "$CI_USER" \
+  --cipassword "$CI_PASSWORD" \
+  --ipconfig0 "ip=${IP_ADDR},gw=${GATEWAY}" \
+  --sshkeys "$SSH_KEY_FILE" \
+  --nameserver "192.168.1.5"
+
+qm cloudinit update "$NEW_VMID"
+qm start "$NEW_VMID"
+
+echo "SUCCESS: VM $VM_NAME ($NEW_VMID) created"
+echo "VM_IP=${IP_ADDR}"
+

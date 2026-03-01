@@ -1,5 +1,0 @@
-- name: Install required packages for OEM 13c
-  dnf:
-    name: "{{ oem_required_packages }}"
-    state: present
-  become: yes

@@ -1,0 +1,4 @@
+- include_tasks: initiator.yml
+- include_tasks: iscsi.yml
+- include_tasks: multipath.yml
+- include_tasks: udev.yml

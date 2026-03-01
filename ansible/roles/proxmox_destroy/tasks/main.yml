@@ -1,0 +1,8 @@
+- name: Deploy destroy script to Proxmox
+  ansible.builtin.template:
+    src: destroy_vm.sh.j2
+    dest: /tmp/destroy_vm.sh
+    mode: '0755'
+
+- name: Execute destroy script
+  ansible.builtin.shell: /tmp/destroy_vm.sh

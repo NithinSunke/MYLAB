@@ -1,6 +1,0 @@
----
-- name: inital os build
-  hosts: oel
-  become: yes
-  roles:
-    - osbuild

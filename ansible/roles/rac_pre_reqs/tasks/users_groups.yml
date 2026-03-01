@@ -1,0 +1,38 @@
+- name: Create Oracle groups with fixed GIDs
+  group:
+    name: "{{ item.name }}"
+    gid: "{{ item.gid }}"
+    state: present
+  loop:
+    - { name: "oinstall", gid: 54321 }
+    - { name: "dba", gid: 54322 }
+    - { name: "oper", gid: 54323 }
+    - { name: "asmadmin", gid: 54324 }
+    - { name: "asmdba", gid: 54325 }
+    - { name: "asmoper", gid: 54326 }
+    - { name: "racdba", gid: 54327 }
+    - { name: "backupdba", gid: 54328 }
+    - { name: "kmdba", gid: 54329 }
+    - { name: "dgdba", gid: 54330 }
+
+- name: Create oracle user
+  user:
+    name: oracle
+    uid: 54331
+    group: oinstall
+    groups: dba,oper,asmdba,racdba,backupdba,kmdba,dgdba
+    shell: /bin/bash
+    create_home: yes
+    append: yes
+    state: present
+
+- name: Create grid user
+  user:
+    name: grid
+    uid: 54332
+    group: oinstall
+    groups: asmadmin,asmdba,asmoper,dba,racdba
+    shell: /bin/bash
+    create_home: yes
+    append: yes
+    state: present

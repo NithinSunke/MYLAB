@@ -1,0 +1,16 @@
+- name: Validate required inputs
+  assert:
+    that:
+      - proxmox_storage is defined
+      - vms is defined
+      - vms | length > 0
+    fail_msg: "proxmox_storage or vms list is missing"
+
+- name: Add disks to multiple VMs
+  command: >
+    qm set {{ item.0.vmid }}
+    --{{ item.1.slot }}
+    {{ proxmox_storage }}:{{ item.1.size }}
+  loop: "{{ vms | subelements('disks') }}"
+  loop_control:
+    label: "VM {{ item.0.vmid }} → {{ item.1.slot }}"

@@ -1,0 +1,5 @@
+- name: Clone Proxmox VM using Cloud-Init
+  hosts: proxmox
+  gather_facts: false
+  roles:
+    - proxmox_clone

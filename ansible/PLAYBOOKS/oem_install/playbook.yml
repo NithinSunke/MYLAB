@@ -1,6 +1,0 @@
----
-- name: oracle 19c database setup
-  hosts: oel
-  become: yes
-  roles:
-    - oem

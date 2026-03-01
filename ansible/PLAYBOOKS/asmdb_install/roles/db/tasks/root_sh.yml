@@ -1,9 +1,0 @@
-- name: Run Oracle DB root scripts on primary node
-  command: "{{ ORACLE_HOME }}/root.sh"
-  become: yes
-  become_user: root
-  register: root_sh
-
-- name: Debug installation output
-  debug:
-    msg: "{{ root_sh.stdout_lines }}"

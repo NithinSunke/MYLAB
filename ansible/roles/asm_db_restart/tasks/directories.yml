@@ -1,0 +1,13 @@
+- name: Create Oracle directory structure
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: grid
+    group: oinstall
+    mode: '0775'
+  loop:
+    - /u01/app
+    - /u01/app/grid
+    - /u01/app/26ai
+    - /u01/app/26ai/grid
+    - /u01/app/oraInventory

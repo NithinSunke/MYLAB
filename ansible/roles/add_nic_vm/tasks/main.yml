@@ -1,0 +1,13 @@
+#################################################
+# ADD NETWORK INTERFACES
+#################################################
+- name: Configure private NIC (RAC interconnect)
+  command: >
+    qm set {{ item.vmid }} --net1 virtio,bridge={{ private_bridge }}
+  loop: "{{ vms }}"
+
+- name: Configure private NIC (SAN network)
+  command: >
+    qm set {{ item.vmid }} --net2 virtio,bridge={{ san_bridge }}
+  loop: "{{ vms }}"
+

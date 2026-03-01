@@ -1,9 +1,0 @@
-{{ ORACLE_SID }} =
-  (DESCRIPTION =
-    (ADDRESS_LIST =
-      (ADDRESS = (PROTOCOL = TCP)(HOST = {{ hostname }})(PORT = {{ listener_port }}))
-    )
-    (CONNECT_DATA =
-      (SERVICE_NAME = {{ ORACLE_SID }} )
-    )
-  )

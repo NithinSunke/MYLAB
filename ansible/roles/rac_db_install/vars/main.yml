@@ -1,0 +1,18 @@
+oracle_home: /u02/app/26ai/dbhome_1
+oracle_base: /u02/app/oracle
+ora_inventory: /u01/app/oraInventory
+oracle_hostname: "{{ ansible_hostname }}"
+ora_languages: en
+unix_group_name: oinstall
+osdba_group: dba
+osbackupdba_group: backupdba
+osdgdba_group: dgdba
+oskmdba_group: kmdba
+osracdba_group: racdba
+node1_hostname: o9o26airac01
+node2_hostname: o9o26airac02
+install_edition: EE
+db_type: GENERAL_PURPOSE
+sys_password: xxxxxxxxxxx
+oracle_unqname: RACDB
+pdb_name: SNVPDB

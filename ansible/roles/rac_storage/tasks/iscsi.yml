@@ -1,0 +1,11 @@
+- name: Discover iSCSI targets
+  command: iscsiadm -m discovery -t sendtargets -p {{ iscsi_target_ip }}
+  changed_when: false
+
+- name: Login to iSCSI target
+  command: iscsiadm -m node -T {{ iscsi_target_iqn }} -p {{ iscsi_target_ip }} --login
+  failed_when: false
+
+- name: Make iSCSI login persistent
+  command: >
+    iscsiadm -m node -T {{ iscsi_target_iqn }} -p {{ iscsi_target_ip }} --op update -n node.startup -v automatic

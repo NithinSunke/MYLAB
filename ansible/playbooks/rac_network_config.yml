@@ -1,0 +1,5 @@
+- name: Configure RAC VM Networking
+  hosts: racnodes
+  become: yes
+  roles:
+    - rac_network_config

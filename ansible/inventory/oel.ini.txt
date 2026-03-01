@@ -1,5 +1,0 @@
-[allvars]
-ansible_user=ansadm
-
-[oel]
-192.168.1.20 ansible_user=ansadm

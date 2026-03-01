@@ -1,0 +1,52 @@
+- name: Create DB directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ oracle_user }}"
+    group: oinstall
+    mode: 0775
+  loop:
+    - "{{ oracle_base }}"
+    - "{{ oracle_home }}"
+  
+- name: Unzip DB software
+  become_user: "{{ oracle_user }}"
+  unarchive:
+    src: /mnt/nfsshare/softs/LINUX.X64_2326100_db_home.zip
+    dest: "{{ oracle_home }}"
+    remote_src: yes
+
+- name: Create DB install response file
+  copy:
+    dest: /home/oracle/db_install.rsp
+    owner: oracle
+    group: oinstall
+    mode: 0600
+    content: |
+      oracle.install.responseFileVersion=/oracle/install/rspfmt_dbinstall_response_schema_v23.0.0
+      installOption=INSTALL_DB_SWONLY
+      ORACLE_HOSTNAME={{ inventory_hostname }}
+      UNIX_GROUP_NAME=oinstall
+      INVENTORY_LOCATION={{ inventory_location }}
+      ORACLE_BASE={{ oracle_base }}
+      ORACLE_HOME={{ oracle_home }}
+      installEdition=EE
+      OSDBA_GROUP=dba
+      OSOPER_GROUP=oper
+      OSBACKUPDBA_GROUP=backupdba
+      OSDGDBA_GROUP=dgdba
+      OSKMDBA_GROUP=kmdba
+      OSRACDBA_GROUP=racdba
+      DECLINE_SECURITY_UPDATES=true
+
+- name: Install DB software
+  become_user: "{{ oracle_user }}"
+  shell: |
+    {{ oracle_home }}/runInstaller -silent -responseFile /home/oracle/db_install.rsp -ignorePrereqFailure
+  register: db_install
+  failed_when: db_install.rc not in [0,6]
+  changed_when: db_install.rc in [0,6]
+
+- name: Run DB root.sh
+  shell: "{{ oracle_home }}/root.sh"
+

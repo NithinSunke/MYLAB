@@ -1,0 +1,25 @@
+---
+- name: Extract VM mapping for this host
+  set_fact:
+    current_vm: >-
+      {{ vms
+         | selectattr('vm_name','equalto',inventory_hostname)
+         | list | first }}
+
+- name: Configure RAC private network
+  community.general.nmcli:
+    conn_name: rac-priv
+    ifname: "{{ private_interface }}"
+    type: ethernet
+    ip4: "{{ current_vm.private_ip }}/{{ netmask }}"
+    autoconnect: yes
+    state: present
+
+- name: Configure SAN network
+  community.general.nmcli:
+    conn_name: rac-san
+    ifname: "{{ san_interface }}"
+    type: ethernet
+    ip4: "{{ current_vm.san_ip }}/{{ netmask }}"
+    autoconnect: yes
+    state: present

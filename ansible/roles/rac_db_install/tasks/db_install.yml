@@ -1,0 +1,45 @@
+- name: Run Oracle Database Software Installation (RAC)
+  become: yes
+  become_user: oracle
+  shell: |
+    export ORACLE_HOME={{ oracle_home }}
+    export ORACLE_BASE={{ oracle_base }}
+
+    {{ oracle_home }}/runInstaller \
+      -ignorePrereq \
+      -waitforcompletion \
+      -silent \
+      -responseFile {{ oracle_home }}/install/response/db_install.rsp \
+      oracle.install.option=INSTALL_DB_SWONLY \
+      ORACLE_HOSTNAME={{ oracle_hostname }} \
+      UNIX_GROUP_NAME={{ unix_group_name }} \
+      INVENTORY_LOCATION={{ ora_inventory }} \
+      SELECTED_LANGUAGES={{ ora_languages }} \
+      ORACLE_HOME={{ oracle_home }} \
+      ORACLE_BASE={{ oracle_base }} \
+      oracle.install.db.InstallEdition={{ install_edition }} \
+      oracle.install.db.OSDBA_GROUP={{ osdba_group }} \
+      oracle.install.db.OSBACKUPDBA_GROUP={{ osbackupdba_group }} \
+      oracle.install.db.OSDGDBA_GROUP={{ osdgdba_group }} \
+      oracle.install.db.OSKMDBA_GROUP={{ oskmdba_group }} \
+      oracle.install.db.OSRACDBA_GROUP={{ osracdba_group }} \
+      oracle.install.db.CLUSTER_NODES={{ node1_hostname }},{{ node2_hostname }} \
+      oracle.install.db.config.starterdb.type={{ db_type }}
+  register: db_install_output
+  async: 7200
+  poll: 20
+  run_once: true
+  when: inventory_hostname == groups['racnodes'][0]
+  ignore_errors: yes
+
+- name: Save db install output
+  copy:
+    content: "{{ db_install_output.stdout }}"
+    dest: /tmp/db_install_output.log
+  run_once: true
+  when: inventory_hostname == groups['racnodes'][0]
+
+- name: Run root.sh on all nodes
+  become: yes
+  shell: "{{ oracle_home }}/root.sh"
+  when: inventory_hostname in groups['racnodes']

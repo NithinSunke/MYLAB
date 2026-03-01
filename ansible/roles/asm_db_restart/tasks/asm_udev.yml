@@ -1,0 +1,11 @@
+- name: Create ASM udev rule file
+  copy:
+    dest: /etc/udev/rules.d/99-asm.rules
+    content: |
+      {% for disk in asm_disks %}
+      ENV{ID_SERIAL}=="{{ disk.serial }}", OWNER="grid", GROUP="asmdba", MODE="0660", SYMLINK+="{{ disk.label }}"
+      {% endfor %}
+  notify: reload udev
+
+- name: Trigger udev
+  command: udevadm trigger

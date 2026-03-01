@@ -1,0 +1,21 @@
+oracle_user: oracle
+
+oracle_home: /u01/app/oracle/product/23ai/dbhome_1
+oracle_base: /u01/app/oracle
+
+db_name: CDB01
+db_sid: CDB01
+pdb_name: ORCLPDB1
+
+db_characterset: AL32UTF8
+db_ncharacterset: AL16UTF16
+
+datafile_dest: /u02/oradata
+recovery_dest: /u02/fra
+
+sys_password: xxxxxxxxxxxxx
+system_password: xxxxxxxxxxxxx
+pdb_admin_password: xxxxxxxxxxxxx
+
+db_memory: 2048
+db_processes: 300

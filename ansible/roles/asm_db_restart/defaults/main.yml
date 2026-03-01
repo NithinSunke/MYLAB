@@ -1,0 +1,39 @@
+update_system: true
+
+grid_vg: grid_vg
+grid_disk: /dev/sdb
+grid_lv: grid_disk1
+grid_mount: /u01
+
+db_vg: db_vg
+db_disk: /dev/sdc
+db_lv: db_disk1
+db_mount: /u02
+
+asm_disks:
+  - device: /dev/sdd
+    serial: "0QEMU_QEMU_HARDDISK_drive-scsi3"
+    label: asm-disk1
+  - device: /dev/sde
+    serial: "0QEMU_QEMU_HARDDISK_drive-scsi4"
+    label: asm-disk2
+
+oracle_user: oracle
+grid_user: grid
+
+oracle_base: /u02/app/oracle
+oracle_home: /u02/app/26ai/dbhome_1
+
+grid_base: /u01/app/grid
+grid_home: /u01/app/26ai/grid
+
+inventory_location: /u01/app/oraInventory
+
+db_name: AISCS
+pdb_name: AIPDB
+
+sys_password: "xxxxxxxxxxxxx"
+asm_password: "xxxxxxxxxxxxx"
+
+crs_disk: /dev/sdd
+data_disk: /dev/sde

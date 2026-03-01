@@ -1,0 +1,22 @@
+- name: Create ASM groups
+  group:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - asmadmin
+    - asmdba
+    - asmoper
+
+- name: Create grid user
+  user:
+    name: grid
+    group: oinstall
+    groups: dba,asmadmin,asmdba,asmoper,racdba
+    append: yes
+    state: present
+
+- name: Add oracle user to ASM groups
+  user:
+    name: oracle
+    groups: asmdba
+    append: yes

@@ -1,0 +1,33 @@
+- name: Install iSCSI client package
+  package:
+    name: iscsi-initiator-utils
+    state: present
+  register: iscsi_pkg_result
+
+- name: Debug package install result
+  debug:
+    var: iscsi_pkg_result
+
+- name: Configure unique iSCSI initiator name
+  copy:
+    dest: /etc/iscsi/initiatorname.iscsi
+    content: |
+      InitiatorName={{ iscsi_domain }}:{{ inventory_hostname }}
+  register: iscsi_copy_result
+
+
+- name: Debug copy result
+  debug:
+    var: iscsi_copy_result
+
+- name: Enable and start iSCSI service
+  systemd:
+    name: iscsid
+    enabled: yes
+    state: started
+  register: iscsi_service_result
+
+- name: Debug service result
+  debug:
+    var: iscsi_service_result
+  notify: restart iscsid

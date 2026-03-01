@@ -1,0 +1,5 @@
+- name: Install/Configure Db Restart
+  hosts: dbserver
+  become: yes
+  roles:
+    - asm_db_restart

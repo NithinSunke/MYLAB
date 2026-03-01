@@ -1,0 +1,36 @@
+- name: Install multipath packages
+  package:
+    name:
+      - device-mapper-multipath
+      - sg3_utils
+    state: present
+
+- name: Load dm_multipath kernel module
+  modprobe:
+    name: dm_multipath
+    state: present
+
+- name: Enable multipath service
+  systemd:
+    name: multipathd
+    enabled: yes
+    state: started
+
+- name: Load dm_multipath kernel module
+  modprobe:
+    name: dm_multipath
+    state: present
+
+- name: Configure multipath
+  copy:
+    dest: /etc/multipath.conf
+    content: |
+      defaults {
+          user_friendly_names yes
+          find_multipaths no
+      }
+  notify: restart multipath
+
+- name: Reload multipath
+  command: multipath -r
+  changed_when: false

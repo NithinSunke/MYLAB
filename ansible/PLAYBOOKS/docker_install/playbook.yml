@@ -1,6 +1,0 @@
----
-- name: Install Docker on OEL8
-  hosts: all
-  become: true
-  roles:
-    - docker_inst

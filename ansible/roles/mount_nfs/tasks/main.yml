@@ -1,0 +1,32 @@
+- name: Install NFS packages (RHEL based)
+  package:
+    name: nfs-utils
+    state: present
+#  when: ansible_os_family == "RedHat"
+
+- name: Install bind-utils packages (RHEL based)
+  package:
+    name: bind-utils
+    state: present
+#  when: ansible_os_family == "RedHat"
+
+
+#- name: Install NFS packages (Debian based)
+#  package:
+#    name: nfs-common
+#    state: present
+#  when: ansible_os_family == "Debian"
+
+- name: Ensure mount directory exists
+  file:
+    path: "{{ nfs_mount_point }}"
+    state: directory
+    mode: '0755'
+
+- name: Mount NFS share and persist
+  mount:
+    path: "{{ nfs_mount_point }}"
+    src: "{{ nfs_server }}:{{ nfs_share }}"
+    fstype: nfs
+    opts: "{{ nfs_mount_opts }}"
+    state: mounted

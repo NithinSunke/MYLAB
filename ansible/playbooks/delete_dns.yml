@@ -1,0 +1,5 @@
+- name: Add Dns record to Technitium Dns Server
+  hosts: proxmox
+  gather_facts: false
+  roles:
+    - delete_dns

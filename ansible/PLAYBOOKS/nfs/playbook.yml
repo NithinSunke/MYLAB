@@ -1,6 +1,0 @@
----
-- name: Mount NFS share on OEL7
-  hosts: oel
-  become: yes
-  roles:
-    - nfs_mount

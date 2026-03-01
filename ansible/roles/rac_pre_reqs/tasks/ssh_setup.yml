@@ -1,0 +1,108 @@
+- name: Ensure .ssh directory exists
+  file:
+    path: "/home/{{ item }}/.ssh"
+    state: directory
+    owner: "{{ item }}"
+    group: oinstall
+    mode: '0700'
+  loop: "{{ ssh_users }}"
+
+
+#############################################################
+# Generate SSH key pair
+#############################################################
+- name: Generate SSH key pair for SSH users
+  become: yes
+  become_user: "{{ item }}"
+  community.crypto.openssh_keypair:
+    path: "~/.ssh/id_{{ ssh_key_type }}"
+    type: "{{ ssh_key_type }}"
+    size: "{{ ssh_key_bits }}"
+    mode: '0600'
+    owner: "{{ item }}"
+    group: oinstall
+    force: no
+  loop: "{{ ssh_users }}"
+
+#############################################################
+## Collect public keys from all nodes (run once)
+#############################################################
+- name: Read public key
+  become: yes
+  become_user: "{{ item }}"
+  command: cat ~/.ssh/id_{{ ssh_key_type }}.pub
+  register: pubkey_output
+  changed_when: false
+  loop: "{{ ssh_users }}"
+
+- name: Store public keys as host fact
+  set_fact:
+    collected_pubkeys: "{{ pubkey_output.results | map(attribute='stdout') | list }}"
+
+- name: Display collected public keys (per host)
+  debug:
+    var: collected_pubkeys
+
+
+#############################################################
+# Build Global Key List (All Nodes)
+#############################################################
+- name: Build aggregated public key list from all nodes
+  run_once: true
+  set_fact:
+    all_pubkeys: >-
+      {{
+        groups['racnodes']
+        | map('extract', hostvars, 'collected_pubkeys')
+        | list
+        | flatten
+        | unique
+      }}
+
+#############################################################
+# Distribute Authorized Keys (Self + Remote)
+#############################################################
+- name: Install authorized_keys for all SSH users
+  become: yes
+  authorized_key:
+    user: "{{ item.0 }}"
+    key: "{{ item.1 }}"
+    state: present
+  loop: "{{ ssh_users | product(all_pubkeys) | list }}"
+
+
+#############################################################
+# Rebuild known_hosts cleanly
+############################################################
+- name: Remove old known_hosts
+  file:
+    path: "/home/{{ item }}/.ssh/known_hosts"
+    state: absent
+  loop: "{{ ssh_users }}"
+############################################################
+# Scan host keys (IP based)
+############################################################
+- name: Scan host keys from all RAC nodes
+  shell: "ssh-keyscan {{ hostvars[item].ansible_host }}"
+  register: hostkey_scan
+  changed_when: false
+  loop: "{{ groups['racnodes'] }}"
+############################################################
+# Install hostname+IP entries in known_hosts
+############################################################
+- name: Install hostname and IP in known_hosts
+  become_user: "{{ item.0 }}"
+  lineinfile:
+    path: "~/.ssh/known_hosts"
+    create: yes
+    mode: '0644'
+    line: >-
+      {{
+        item.1.stdout
+        | regex_replace(
+            hostvars[item.1.item].ansible_host,
+            item.1.item + ',' + hostvars[item.1.item].ansible_host
+          )
+      }}
+    state: present
+  loop: "{{ ssh_users | product(hostkey_scan.results) | list }}"

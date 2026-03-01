@@ -1,0 +1,24 @@
+oracle_base: /u02/app/oracle
+oracle_home: /u02/app/26ai/dbhome_1
+grid_user: grid
+oracle_user: oracle
+
+grid_vg: grid_vg
+grid_disk: /dev/sdb
+grid_lv: grid_disk1
+grid_mount: /u01
+
+db_vg: db_vg
+db_disk: /dev/sdc
+db_lv: db_disk1
+db_mount: /u02
+
+grid_home: /u01/app/26ai/grid
+grid_base: /u01/app/grid
+
+ssh_users:
+  - grid
+  - oracle
+
+ssh_key_type: rsa
+ssh_key_bits: 2048

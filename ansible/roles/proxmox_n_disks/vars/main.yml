@@ -1,0 +1,16 @@
+proxmox_storage: vmdata
+
+vms:
+  - vmid: 112
+    disks:
+      - slot: scsi1
+        size: 25
+      - slot: scsi2
+        size: 25
+
+  - vmid: 113
+    disks:
+      - slot: scsi1
+        size: 25
+      - slot: scsi2
+        size: 25

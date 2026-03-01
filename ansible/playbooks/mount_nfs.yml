@@ -1,0 +1,6 @@
+- hosts: racnodes
+  become: yes
+  gather_facts: false
+  ignore_unreachable: true
+  roles:
+    - mount_nfs

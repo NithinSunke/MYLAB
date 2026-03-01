@@ -1,7 +1,0 @@
----
-- name: patching Grid infra
-  hosts: oel
-  become: yes
-  roles:
-    - grid_patching
-

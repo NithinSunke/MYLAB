@@ -1,0 +1,15 @@
+- name: Run GI CRS precheck (CVU)
+  become: yes
+  become_user: grid
+  shell: |
+    /u01/app/26ai/grid/runcluvfy.sh stage -pre crsinst -n {{ groups['racnodes'] | join(',') }} -verbose | tee /tmp/cvu_precheck.log
+  register: cvu_output
+  delegate_to: o9o26airac01
+  run_once: true
+  ignore_errors: yes
+
+- name: Show CVU output
+  debug:
+    msg: "{{ cvu_output.stdout }}"
+  delegate_to: o9o26airac01
+  run_once: true

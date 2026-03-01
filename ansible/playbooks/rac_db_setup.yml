@@ -1,0 +1,23 @@
+- name: Install Oracle 19c DB Software (RAC)
+  hosts: racnodes
+  become: yes
+  roles:
+    - rac_db_install
+
+- name: Add DB entry to /etc/oratab
+  hosts: racnodes
+  become: yes
+  vars:
+    db_sid:
+      o9o26airac01: "RACDB1"
+      o9o26airac02: "RACDB2"
+    db_home: /u02/app/26ai/dbhome_1
+
+- name: Add correct DB entry
+  lineinfile:
+    path: /etc/oratab
+    line: "{{ db_sid[inventory_hostname] }}:{{ db_home }}:N"
+    regexp: '^{{ db_sid[inventory_hostname] | regex_escape }}:'
+    state: present
+    insertafter: EOF
+    backup: yes

@@ -1,0 +1,2 @@
+- include_tasks: oracheck.yml
+- include_tasks: grid_install.yml

@@ -1,0 +1,7 @@
+- name: Create LVM on new disks
+  hosts: dbserver
+  become: yes
+  gather_facts: no
+
+  roles:
+    - lvm_create

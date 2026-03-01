@@ -1,0 +1,3 @@
+{% for disk in asm_disks %}
+ACTION=="add|change", KERNEL=="dm-*", ENV{DM_UUID}=="mpath-{{ disk.wwid }}", OWNER="grid", GROUP="asmdba", MODE="0660", SYMLINK+="{{ disk.name }}"
+{% endfor %}

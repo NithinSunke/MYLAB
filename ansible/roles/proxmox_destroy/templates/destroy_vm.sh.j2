@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+VMID="{{ vmid }}"
+FORCE_STOP="{{ force_stop | lower }}"
+PURGE_DISKS="{{ purge_disks | lower }}"
+
+if ! qm status "$VMID" &>/dev/null; then
+  echo "ERROR: VMID $VMID does not exist"
+  exit 1
+fi
+
+STATUS=$(qm status "$VMID" | awk '{print $2}')
+
+if [[ "$STATUS" == "running" ]]; then
+  if [[ "$FORCE_STOP" == "true" ]]; then
+    echo "Stopping VM $VMID"
+    qm stop "$VMID"
+    sleep 5
+  else
+    echo "ERROR: VM $VMID is running. Enable force_stop to continue."
+    exit 1
+  fi
+fi
+
+echo "Destroying VM $VMID"
+
+if [[ "$PURGE_DISKS" == "true" ]]; then
+  qm destroy "$VMID" --purge 1
+else
+  qm destroy "$VMID"
+fi
+
+echo "SUCCESS: VM $VMID destroyed"

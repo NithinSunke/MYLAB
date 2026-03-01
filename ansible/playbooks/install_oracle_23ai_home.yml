@@ -1,0 +1,7 @@
+---
+- name: Install Oracle Database 23ai Home
+  hosts: dbserver
+  become: yes
+  gather_facts: yes
+  roles:
+    - oracle_23ai_home

@@ -1,0 +1,5 @@
+- name: Destroy Proxmox VM
+  hosts: proxmox
+  gather_facts: false
+  roles:
+    - proxmox_destroy

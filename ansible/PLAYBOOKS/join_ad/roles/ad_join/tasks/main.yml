@@ -1,9 +1,0 @@
----
-- name: Add linux server to AD
-  debug:
-    msg:
-      - 'This playbook is for joining linux server into AD , started at {{ansible_date_time.iso8601}}:'
-
-- name: tasks for AD Join
-  block:
-    - import_tasks: add_host_AD.yml

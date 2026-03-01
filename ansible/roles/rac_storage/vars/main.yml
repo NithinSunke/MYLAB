@@ -1,0 +1,8 @@
+iscsi_target_ip: 172.16.0.12
+iscsi_target_iqn: iqn.2026-02.scslabs.nas01:racluns
+iscsi_domain: iqn.2026-02.scslabs.nas01
+
+asm_disk_devices:
+  - { device: "mapper/mpathd", name: "asm-crs" }
+  - { device: "mapper/mpathe", name: "asm-data" }
+  - { device: "mapper/mpathf", name: "asm-fra" }

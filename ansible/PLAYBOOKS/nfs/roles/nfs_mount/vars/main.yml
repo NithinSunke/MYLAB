@@ -1,4 +1,0 @@
----
-nfs_server: "homelab.scslabs.com"
-nfs_exported_path: "/nfsshare"
-nfs_mount_point: "/mnt/nfsshare"

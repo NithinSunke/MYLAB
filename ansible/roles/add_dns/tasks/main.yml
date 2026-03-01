@@ -1,0 +1,17 @@
+- name: Add DNS A record in Technitium
+  uri:
+    url: "https://dns.snvcloud.dpdns.org/api/zones/records/add"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      token: "{{ lookup('env','TECHNITIUM_API_KEY') }}"
+      zone: "{{ dns_zone }}"
+      domain: "{{ vm_name }}.{{ dns_zone }}"
+      type: "A"
+      ttl: 300
+      ipAddress: "{{ vm_ip }}"
+    return_content: true
+  register: dns_response
+
+- debug:
+    var: dns_response.content

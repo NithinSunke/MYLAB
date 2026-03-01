@@ -1,6 +1,0 @@
-- name: Execute Oracle Grid Configuration Tools
-  command:
-    cmd: "{{ GRID_HOME }}/gridSetup.sh -executeConfigTools -responseFile {{ GRID_HOME }}/install/response/grid_install.rsp -silent"
-  become: yes
-  become_user: oracle
-  ignore_errors: yes

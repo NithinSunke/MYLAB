@@ -1,0 +1,16 @@
+grid_home: /u01/app/26ai/grid
+ora_inventory: /u01/app/oraInventory
+grid_base: /u01/app/grid
+ora_languages: en
+scan_name: rac-scan
+scan_port: 1521
+cluster_name: RACCLUSTER
+node1_fq: o9o26airac01
+node1_vip: o9o26airac01-vip
+node2_fq: o9o26airac02
+node2_vip: o9o26airac02-vip
+public_if: eth0
+private_if: eth1
+public_subnet: 192.168.1.0
+private_subnet: 10.0.0.0
+sys_password: xxxxxxxxx

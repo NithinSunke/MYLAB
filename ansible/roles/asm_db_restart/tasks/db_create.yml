@@ -1,0 +1,32 @@
+- name: Create DBCA response file
+  copy:
+    dest: /home/oracle/dbca.rsp
+    owner: oracle
+    group: oinstall
+    mode: 0600
+    content: |
+      gdbName={{ db_name }}
+      sid={{ db_name }}
+      databaseConfigType=SI
+      createAsContainerDatabase=true
+      numberOfPDBs=1
+      pdbName={{ pdb_name }}
+      templateName=General_Purpose.dbc
+      sysPassword={{ sys_password }}
+      systemPassword={{ sys_password }}
+      pdbAdminPassword={{ sys_password }}
+      storageType=ASM
+      diskGroupName=DATA
+      datafileDestination=+DATA
+      characterSet=AL32UTF8
+      nationalCharacterSet=AL16UTF16
+      memoryPercentage=30
+      databaseType=MULTIPURPOSE
+      emConfiguration=NONE
+ 
+ 
+- name: Create database
+  become_user: "{{ oracle_user }}"
+  shell: |
+    {{ oracle_home }}/bin/dbca -silent -createDatabase -responseFile /home/oracle/dbca.rsp
+

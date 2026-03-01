@@ -1,0 +1,78 @@
+---
+- name: Ensure LVM and XFS tools are installed
+  package:
+    name:
+      - lvm2
+      - xfsprogs
+    state: present
+
+###############################################################################
+# STEP 1: Validate disks exist (AWX-safe)
+###############################################################################
+- name: Validate disks exist
+  ansible.builtin.shell:
+    cmd: "test -b {{ item.disk }}"
+  loop: "{{ lvm_layout }}"
+
+###############################################################################
+# STEP 2: Create Physical Volumes
+###############################################################################
+- name: Create physical volume if not exists
+  ansible.builtin.shell:
+    cmd: |
+      pvs {{ item.disk }} >/dev/null 2>&1 || pvcreate {{ item.disk }}
+  loop: "{{ lvm_layout }}"
+
+###############################################################################
+# STEP 3: Create Volume Groups
+###############################################################################
+- name: Create volume group if not exists
+  ansible.builtin.shell:
+    cmd: |
+      vgs {{ item.vg }} >/dev/null 2>&1 || vgcreate {{ item.vg }} {{ item.disk }}
+  loop: "{{ lvm_layout }}"
+
+###############################################################################
+# STEP 4: Create Logical Volumes
+###############################################################################
+- name: Create logical volume if not exists
+  ansible.builtin.shell:
+    cmd: |
+      lvs /dev/{{ item.vg }}/{{ item.lv.name }} >/dev/null 2>&1 || \
+      lvcreate -L {{ item.lv.size }} -n {{ item.lv.name }} {{ item.vg }}
+  loop: "{{ lvm_layout }}"
+
+###############################################################################
+# STEP 5: Create XFS filesystem (idempotent)
+###############################################################################
+- name: Create filesystem on logical volume
+  ansible.builtin.shell:
+    cmd: |
+      blkid /dev/{{ item.vg }}/{{ item.lv.name }} >/dev/null 2>&1 || \
+      mkfs.{{ item.lv.fs }} /dev/{{ item.vg }}/{{ item.lv.name }}
+  loop: "{{ lvm_layout }}"
+
+###############################################################################
+# STEP 6: Create mount points
+###############################################################################
+- name: Create mount directories
+  file:
+    path: "{{ item.lv.mount }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop: "{{ lvm_layout }}"
+
+###############################################################################
+# STEP 7: Mount and persist in /etc/fstab
+###############################################################################
+- name: Mount logical volumes
+  mount:
+    path: "{{ item.lv.mount }}"
+    src: "/dev/{{ item.vg }}/{{ item.lv.name }}"
+    fstype: "{{ item.lv.fs }}"
+    opts: defaults
+    state: mounted
+  loop: "{{ lvm_layout }}"
+

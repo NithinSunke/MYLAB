@@ -1,0 +1,4 @@
+- name: Install Oracle preinstall package
+  dnf:
+    name: oracle-ai-database-preinstall-26ai
+    state: present

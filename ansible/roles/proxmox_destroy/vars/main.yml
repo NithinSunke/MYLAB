@@ -1,0 +1,3 @@
+vmid: 110
+force_stop: true
+purge_disks: true
